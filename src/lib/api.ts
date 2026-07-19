@@ -60,6 +60,7 @@ export interface Job {
   linkedin?: string;
   founded?: string;
   size?: string;
+  email?: string;
 }
 
 export interface JobForYou {
