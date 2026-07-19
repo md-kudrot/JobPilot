@@ -3,10 +3,22 @@
 import React from 'react';
 import { SparklesFill, Comments } from '@gravity-ui/icons';
 
-const MATCHING_SKILLS = ['Figma', 'Design Systems', 'UX Research', 'SaaS'];
-const MISSING_SKILLS = ['Three.js', 'Web Accessibility'];
+interface AIMatchAnalysisProps {
+  score?: number;
+  matchingSkills?: string[];
+  missingSkills?: string[];
+}
 
-export default function AIMatchAnalysis() {
+export default function AIMatchAnalysis({
+  score = 92,
+  matchingSkills = ['Figma', 'Design Systems', 'UX Research', 'SaaS'],
+  missingSkills = ['Three.js', 'Web Accessibility'],
+}: AIMatchAnalysisProps) {
+  const MATCHING_SKILLS = matchingSkills;
+  const MISSING_SKILLS = missingSkills;
+  const circumference = 364.4;
+  const dashOffset = circumference - (circumference * score) / 100;
+  const matchLabel = score >= 90 ? 'Excellent Match' : score >= 75 ? 'Great Match' : score >= 60 ? 'Good Match' : 'Fair Match';
   return (
     <div className="glass p-6 rounded-xl ai-glow border-[#c0c1ff]/20 relative overflow-hidden">
       <div className="absolute top-0 right-0 p-3 opacity-20">
@@ -38,17 +50,17 @@ export default function AIMatchAnalysis() {
               r="58"
               stroke="currentColor"
               strokeWidth="8"
-              strokeDasharray="364.4"
-              strokeDashoffset="29.1"
+              strokeDasharray={circumference}
+              strokeDashoffset={dashOffset}
               strokeLinecap="round"
               className="text-[#4edea3] transition-all duration-500"
               style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
             ></circle>
           </svg>
-          <span className="absolute text-[36px] leading-[44px] tracking-[-0.03em] font-bold text-[#4edea3]">92%</span>
+          <span className="absolute text-[36px] leading-[44px] tracking-[-0.03em] font-bold text-[#4edea3]">{score}%</span>
         </div>
 
-        <p className="text-[20px] leading-[28px] tracking-[-0.01em] font-semibold text-[#dae2fd]">Excellent Match</p>
+        <p className="text-[20px] leading-[28px] tracking-[-0.01em] font-semibold text-[#dae2fd]">{matchLabel}</p>
       </div>
 
       <div className="space-y-6">

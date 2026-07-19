@@ -13,6 +13,7 @@ import {
   ListUl,
   MagicWand,
 } from '@gravity-ui/icons';
+import { api } from '@/lib/api';
 
 export default function JobPostForm() {
   const [aiOptimization, setAiOptimization] = useState(true);
@@ -25,6 +26,16 @@ export default function JobPostForm() {
     cultural: 45,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const [title, setTitle] = useState('');
+  const [company, setCompany] = useState('');
+  const [location, setLocation] = useState('');
+  const [remoteOption, setRemoteOption] = useState(false);
+  const [jobType, setJobType] = useState('Full-time');
+  const [salaryMin, setSalaryMin] = useState('');
+  const [salaryMax, setSalaryMax] = useState('');
+  const [description, setDescription] = useState('');
 
   const handleAddSkill = () => {
     if (newSkill.trim()) {
@@ -41,12 +52,57 @@ export default function JobPostForm() {
     setSliders({ ...sliders, [key]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage(null);
+
+    if (!title.trim() || !company.trim() || !location.trim()) {
+      setMessage('Please fill in job title, company, and location.');
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const salary =
+        salaryMin && salaryMax
+          ? `$${salaryMin}k - $${salaryMax}k`
+          : salaryMin
+            ? `From $${salaryMin}k`
+            : 'Competitive';
+
+      await api.post('/api/jobs', {
+        title: title.trim(),
+        company: company.trim(),
+        industry: jobType,
+        location: remoteOption ? 'Remote' : location.trim(),
+        matchPercent: sliders.technical,
+        matchTone: 'primary',
+        salary,
+        skills,
+        logo: 'https://placehold.co/48x48/222a3d/c0c1ff?text=' + encodeURIComponent(company.trim().charAt(0) || 'J'),
+        logoAlt: `${company.trim()} company logo`,
+        description: description.trim(),
+        jobType,
+        remoteOption,
+        salaryMin: salaryMin ? Number(salaryMin) : null,
+        salaryMax: salaryMax ? Number(salaryMax) : null,
+        aiOptimization,
+        aiCriteria: sliders,
+      });
+
+      setMessage('Job posted successfully!');
+      setTitle('');
+      setCompany('');
+      setLocation('');
+      setSalaryMin('');
+      setSalaryMax('');
+      setDescription('');
+      setSkills([]);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Failed to post job');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -102,6 +158,8 @@ export default function JobPostForm() {
               className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 px-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all"
               placeholder="e.g. Senior Frontend Engineer"
               type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
@@ -114,6 +172,8 @@ export default function JobPostForm() {
               className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 px-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all"
               placeholder="Your Company Name"
               type="text"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
             />
           </div>
 
@@ -127,11 +187,18 @@ export default function JobPostForm() {
                 className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 px-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all"
                 placeholder="City, Country"
                 type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
             <div className="flex items-end">
               <label className="relative inline-flex items-center cursor-pointer">
-                <input className="sr-only peer" type="checkbox" />
+                <input
+                  className="sr-only peer"
+                  type="checkbox"
+                  checked={remoteOption}
+                  onChange={(e) => setRemoteOption(e.target.checked)}
+                />
                 <div className="w-11 h-6 bg-[#2d3449] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#c0c1ff]"></div>
                 <span className="ms-3 text-[14px] leading-[20px] tracking-[0em] font-normal text-[#dae2fd]">
                   Remote Option
@@ -145,7 +212,11 @@ export default function JobPostForm() {
             <label className="block text-[12px] leading-[16px] tracking-[0.05em] font-bold text-[#c7c4d7] uppercase">
               Job Type
             </label>
-            <select className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 px-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all appearance-none">
+            <select
+              className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 px-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all appearance-none"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+            >
               <option>Full-time</option>
               <option>Part-time</option>
               <option>Contract</option>
@@ -166,6 +237,8 @@ export default function JobPostForm() {
                   className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 pl-8 pr-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all"
                   placeholder="Min"
                   type="number"
+                  value={salaryMin}
+                  onChange={(e) => setSalaryMin(e.target.value)}
                 />
               </div>
               <span className="text-[#c7c4d7]">—</span>
@@ -175,6 +248,8 @@ export default function JobPostForm() {
                   className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 pl-8 pr-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all"
                   placeholder="Max"
                   type="number"
+                  value={salaryMax}
+                  onChange={(e) => setSalaryMax(e.target.value)}
                 />
               </div>
             </div>
@@ -214,6 +289,8 @@ export default function JobPostForm() {
               <textarea
                 className="w-full bg-transparent border-none text-[#dae2fd] p-4 focus:ring-0 resize-none min-h-[160px] flex-grow"
                 placeholder="Describe the role and your company culture..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               ></textarea>
             </div>
           </div>
@@ -369,7 +446,16 @@ export default function JobPostForm() {
       </section>
 
       {/* Bottom Actions */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6">
+      <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6">
+        {message && (
+          <span
+            className={`text-[12px] leading-[16px] font-medium ${
+              message.includes('success') ? 'text-[#4edea3]' : 'text-[#ff8a8a]'
+            }`}
+          >
+            {message}
+          </span>
+        )}
         <button
           className="px-16 py-3 text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#c7c4d7] border border-[#ffffff]/10 rounded-[14px] hover:bg-[#ffffff]/5 transition-all active:scale-95"
           type="button"

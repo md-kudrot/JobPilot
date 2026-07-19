@@ -6,6 +6,10 @@ interface JobDetailsHeaderProps {
   company: string;
   location: string;
   logo: string;
+  salary?: string;
+  employmentType?: string;
+  experience?: string;
+  companySize?: string;
 }
 
 export default function JobDetailsHeader({
@@ -13,6 +17,10 @@ export default function JobDetailsHeader({
   company,
   location,
   logo,
+  salary = '$140k – $190k',
+  employmentType = 'Full-time',
+  experience = '5+ years exp.',
+  companySize = '100-200 employees',
 }: JobDetailsHeaderProps) {
   return (
     <div className="glass p-6 rounded-xl space-y-6">
@@ -35,19 +43,19 @@ export default function JobDetailsHeader({
       <div className="flex flex-wrap gap-3 pt-6 border-t border-[#ffffff]/5">
         <div className="flex items-center gap-1 text-[#c7c4d7] text-[12px] leading-[16px] tracking-[0.02em] font-medium">
           <Clock className="w-[18px] h-[18px]" />
-          <span>Full-time</span>
+          <span>{employmentType}</span>
         </div>
         <div className="flex items-center gap-1 text-[#c7c4d7] text-[12px] leading-[16px] tracking-[0.02em] font-medium">
           <Wallet className="w-[18px] h-[18px]" />
-          <span>$140k – $190k</span>
+          <span>{salary}</span>
         </div>
         <div className="flex items-center gap-1 text-[#c7c4d7] text-[12px] leading-[16px] tracking-[0.02em] font-medium">
           <Briefcase className="w-[18px] h-[18px]" />
-          <span>5+ years exp.</span>
+          <span>{experience}</span>
         </div>
         <div className="flex items-center gap-1 text-[#c7c4d7] text-[12px] leading-[16px] tracking-[0.02em] font-medium">
           <Persons className="w-[18px] h-[18px]" />
-          <span>100-200 employees</span>
+          <span>{companySize}</span>
         </div>
       </div>
     </div>

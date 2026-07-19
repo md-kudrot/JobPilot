@@ -36,7 +36,7 @@ export default async function PostJobPage() {
 
         <JobPostForm />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -3,16 +3,47 @@ import { Xmark, ChevronDown, ArrowUpArrowDown } from '@gravity-ui/icons';
 
 const FILTERS = ['Job Type', 'Experience', 'Salary Range', 'Source'];
 
-export default function JobsFilterBar() {
+const SORT_LABELS: Record<string, string> = {
+  newest: 'Newest First',
+  oldest: 'Oldest First',
+  match: 'Best Match',
+};
+
+interface JobsFilterBarProps {
+  skillFilter?: string;
+  onClearSkill?: () => void;
+  sort: string;
+  onSortChange: (sort: string) => void;
+}
+
+export default function JobsFilterBar({
+  skillFilter,
+  onClearSkill,
+  sort,
+  onSortChange,
+}: JobsFilterBarProps) {
+  const cycleSort = () => {
+    const order = ['newest', 'match', 'oldest'];
+    const next = order[(order.indexOf(sort) + 1) % order.length];
+    onSortChange(next);
+  };
+
   return (
     <div className="sticky top-20 z-40 py-3 bg-[#0b1326]/90 backdrop-blur-md">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0">
-          <button className="flex items-center gap-1 px-3 py-1 rounded-full glass-stroke text-[12px] leading-[16px] tracking-[0.02em] font-medium bg-[#222a3d] text-[#dae2fd] border-[#c0c1ff] whitespace-nowrap">
-            <span>Skills: React</span>
-            <Xmark className="w-4 h-4" />
-          </button>
-          <div className="h-6 w-px bg-[#ffffff]/10 mx-1"></div>
+          {skillFilter && (
+            <>
+              <button
+                onClick={onClearSkill}
+                className="flex items-center gap-1 px-3 py-1 rounded-full glass-stroke text-[12px] leading-[16px] tracking-[0.02em] font-medium bg-[#222a3d] text-[#dae2fd] border-[#c0c1ff] whitespace-nowrap"
+              >
+                <span>Skills: {skillFilter}</span>
+                <Xmark className="w-4 h-4" />
+              </button>
+              <div className="h-6 w-px bg-[#ffffff]/10 mx-1"></div>
+            </>
+          )}
           <div className="flex items-center gap-1">
             {FILTERS.map((filter) => (
               <button
@@ -26,8 +57,11 @@ export default function JobsFilterBar() {
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#908fa0]">Sort by:</span>
-          <button className="flex items-center gap-1 px-3 py-1 rounded-lg glass-stroke text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#dae2fd] hover:bg-[#ffffff]/5">
-            Newest First <ArrowUpArrowDown className="w-[18px] h-[18px]" />
+          <button
+            onClick={cycleSort}
+            className="flex items-center gap-1 px-3 py-1 rounded-lg glass-stroke text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#dae2fd] hover:bg-[#ffffff]/5"
+          >
+            {SORT_LABELS[sort] ?? 'Newest First'} <ArrowUpArrowDown className="w-[18px] h-[18px]" />
           </button>
         </div>
       </div>

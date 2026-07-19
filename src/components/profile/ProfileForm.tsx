@@ -11,7 +11,8 @@ import {
   Xmark,
   FloppyDisk,
 } from '@gravity-ui/icons';
-import { useSession } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
+import { api } from '@/lib/api';
 
 type JobType = 'Remote' | 'Onsite' | 'Hybrid';
 
@@ -27,7 +28,7 @@ interface ProfileErrors {
 }
 
 export default function ProfileForm() {
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
   // Prefill identity from the logged-in user; falls back to empty for guests.
   const [fullName, setFullName] = useState(session?.user.name ?? '');
   const [email, setEmail] = useState(session?.user.email ?? '');
@@ -40,12 +41,43 @@ export default function ProfileForm() {
   const [bio, setBio] = useState('');
   const [resumeLink, setResumeLink] = useState('');
   const [errors, setErrors] = useState<ProfileErrors>({});
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
   // useSession resolves after mount; backfill name/email once it arrives,
-  // but don't clobber edits the user has already typed.
+  // then load any saved profile from the backend and hydrate the form.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (session?.user.name) setFullName((prev) => prev || session.user.name);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (session?.user.email) setEmail((prev) => prev || session.user.email);
+
+    if (session?.user.email) {
+      api
+        .get<{ profile: {
+          fullName?: string;
+          experience?: string | number;
+          jobType?: JobType;
+          role?: string;
+          location?: string;
+          skills?: string[];
+          bio?: string;
+          resumeLink?: string;
+        } }>(`/api/profile/${encodeURIComponent(session.user.email)}`)
+        .then(({ profile }) => {
+          if (profile.fullName) setFullName(profile.fullName);
+          if (profile.experience !== undefined) setExperience(String(profile.experience));
+          if (profile.jobType) setJobType(profile.jobType);
+          if (profile.role) setRole(profile.role);
+          if (profile.location) setLocation(profile.location);
+          if (profile.skills) setSkills(profile.skills);
+          if (profile.bio) setBio(profile.bio);
+          if (profile.resumeLink) setResumeLink(profile.resumeLink);
+        })
+        .catch(() => {
+          // no saved profile yet — that's fine
+        });
+    }
   }, [session]);
 
   const handleAddSkill = () => {
@@ -92,6 +124,32 @@ export default function ProfileForm() {
     return Object.keys(next).length === 0;
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaveMessage(null);
+    if (!validate()) return;
+
+    setSaving(true);
+    try {
+      await api.put('/api/profile', {
+        fullName: fullName.trim(),
+        email: email.trim(),
+        experience: Number(experience),
+        jobType,
+        role: role.trim(),
+        location: location.trim(),
+        skills,
+        bio: bio.trim(),
+        resumeLink: resumeLink.trim(),
+      });
+      setSaveMessage('Profile saved successfully!');
+    } catch (err) {
+      setSaveMessage(err instanceof Error ? err.message : 'Failed to save profile');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const inputClass =
     'w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 px-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all placeholder:text-[#908fa0]/50';
   const labelClass =
@@ -99,13 +157,7 @@ export default function ProfileForm() {
   const errorClass = 'text-[12px] leading-[16px] tracking-[0em] font-medium text-[#ff8a8a]';
 
   return (
-    <form
-      className="space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        validate();
-      }}
-    >
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 1: Basic Info */}
         <section className="glass-card p-6 rounded-2xl flex flex-col gap-6">
@@ -318,14 +370,23 @@ export default function ProfileForm() {
       </div>
 
       {/* Bottom Actions */}
-      <div className="flex justify-end pt-2">
+      <div className="flex items-center justify-end gap-4 pt-2">
+        {saveMessage && (
+          <span
+            className={`text-[12px] leading-[16px] font-medium ${
+              saveMessage.includes('success') ? 'text-[#4edea3]' : 'text-[#ff8a8a]'
+            }`}
+          >
+            {saveMessage}
+          </span>
+        )}
         <button
-          className="px-16 py-3 text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#ffffff] bg-[#6366F1] rounded-[14px] flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+          className="px-16 py-3 text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#ffffff] bg-[#6366F1] rounded-[14px] flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#6366F1]/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
-          disabled
+          disabled={saving}
         >
           <FloppyDisk className="w-4 h-4" />
-          <span>Save Profile</span>
+          <span>{saving ? 'Saving...' : 'Save Profile'}</span>
         </button>
       </div>
     </form>

@@ -1,59 +1,76 @@
-import React from 'react';
-import { FileText, CircleCheck, Briefcase, CircleXmark } from '@gravity-ui/icons';
+'use client';
 
-interface Stat {
-  label: string;
-  value: string;
-  icon: React.ComponentType<{ className?: string }>;
-  iconStyles: string;
-  trend: string;
-  trendStyles: string;
-  delay: string;
+import React, { useEffect, useState } from 'react';
+import { FileText, CircleCheck, Briefcase, CircleXmark } from '@gravity-ui/icons';
+import { api } from '@/lib/api';
+import { authClient } from '@/lib/auth-client';
+
+interface StatsData {
+  totalApplications: number;
+  underReview: number;
+  interviews: number;
+  rejected: number;
 }
 
-const STATS: Stat[] = [
-  {
-    label: 'Total Applications',
-    value: '24',
-    icon: FileText,
-    iconStyles: 'bg-[#c0c1ff]/10 text-[#c0c1ff]',
-    trend: '+3 this week',
-    trendStyles: 'text-[#4edea3] font-bold',
-    delay: '0.1s',
-  },
-  {
-    label: 'Under Review',
-    value: '12',
-    icon: CircleCheck,
-    iconStyles: 'bg-[#4edea3]/10 text-[#4edea3]',
-    trend: 'Active',
-    trendStyles: 'text-[#4edea3] font-bold',
-    delay: '0.2s',
-  },
-  {
-    label: 'Interviews',
-    value: '5',
-    icon: Briefcase,
-    iconStyles: 'bg-[#ffb783]/10 text-[#ffb783]',
-    trend: '+2 scheduled',
-    trendStyles: 'text-[#ffb783] font-bold',
-    delay: '0.3s',
-  },
-  {
-    label: 'Rejected',
-    value: '7',
-    icon: CircleXmark,
-    iconStyles: 'bg-[#ffb4ab]/10 text-[#ffb4ab]',
-    trend: '-1 today',
-    trendStyles: 'text-[#ffb4ab] font-bold',
-    delay: '0.4s',
-  },
-];
-
 export default function ApplicationsStats() {
+  const { data: session } = authClient.useSession();
+  const [stats, setStats] = useState<StatsData>({
+    totalApplications: 0,
+    underReview: 0,
+    interviews: 0,
+    rejected: 0,
+  });
+
+  useEffect(() => {
+    const query = session?.user?.email ? `?email=${encodeURIComponent(session.user.email)}` : '';
+    api
+      .get<{ stats: StatsData }>(`/api/applications/stats${query}`)
+      .then((data) => setStats(data.stats))
+      .catch(() => {});
+  }, [session]);
+
+  const cards = [
+    {
+      label: 'Total Applications',
+      value: stats.totalApplications,
+      icon: FileText,
+      iconStyles: 'bg-[#c0c1ff]/10 text-[#c0c1ff]',
+      trend: 'All time',
+      trendStyles: 'text-[#4edea3] font-bold',
+      delay: '0.1s',
+    },
+    {
+      label: 'Under Review',
+      value: stats.underReview,
+      icon: CircleCheck,
+      iconStyles: 'bg-[#4edea3]/10 text-[#4edea3]',
+      trend: 'Active',
+      trendStyles: 'text-[#4edea3] font-bold',
+      delay: '0.2s',
+    },
+    {
+      label: 'Interviews',
+      value: stats.interviews,
+      icon: Briefcase,
+      iconStyles: 'bg-[#ffb783]/10 text-[#ffb783]',
+      trend: 'Scheduled',
+      trendStyles: 'text-[#ffb783] font-bold',
+      delay: '0.3s',
+    },
+    {
+      label: 'Rejected',
+      value: stats.rejected,
+      icon: CircleXmark,
+      iconStyles: 'bg-[#ffb4ab]/10 text-[#ffb4ab]',
+      trend: 'Closed',
+      trendStyles: 'text-[#ffb4ab] font-bold',
+      delay: '0.4s',
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-      {STATS.map((stat) => (
+      {cards.map((stat) => (
         <div
           key={stat.label}
           className="glass-card rounded-xl p-6 flex flex-col justify-between ai-glow animate-fade-in"

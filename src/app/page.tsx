@@ -16,7 +16,7 @@ export default function JobPilotPage() {
   return (
     <div className="bg-[#0b1326] text-[#dae2fd] min-h-screen">
       <div className="w-[80%] mx-auto">
-        <Header />
+        {/* <Header /> */}
         <main className="pt-20">
           <Hero />
           <Stats />
@@ -27,7 +27,7 @@ export default function JobPilotPage() {
           <Faq />
           <Cta />
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

@@ -1,13 +1,29 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { Funnel, Plus } from '@gravity-ui/icons';
+import { api } from '@/lib/api';
+import { authClient } from '@/lib/auth-client';
 
 export default function ApplicationsHeader() {
+  const { data: session } = authClient.useSession();
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const query = session?.user?.email ? `?email=${encodeURIComponent(session.user.email)}` : '';
+    api
+      .get<{ stats: { totalApplications: number } }>(`/api/applications/stats${query}`)
+      .then((data) => setCount(data.stats.totalApplications))
+      .catch(() => setCount(null));
+  }, [session]);
+
   return (
     <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 animate-fade-in">
       <div>
         <h1 className="text-[30px] leading-[38px] tracking-[-0.02em] font-semibold text-[#dae2fd] mb-1">My Applications</h1>
         <p className="text-[16px] leading-[24px] tracking-[0em] font-normal text-[#c7c4d7]">
-          Track all your job applications in one place. 24 active applications.
+          Track all your job applications in one place.
+          {count !== null && ` ${count} total applications.`}
         </p>
       </div>
       <div className="flex gap-3">

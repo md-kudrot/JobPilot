@@ -1,38 +1,102 @@
 import React from 'react';
-import { Globe, Link as LinkIcon } from '@gravity-ui/icons';
+import { Globe, Link as LinkIcon, House, MapPin, Clock } from '@gravity-ui/icons';
 
-export default function CompanyInfo() {
+interface CompanyInfoProps {
+  company: string;
+  logo?: string;
+  location?: string;
+  industry?: string;
+  website?: string;
+  linkedin?: string;
+  founded?: string;
+  size?: string;
+  description?: string;
+}
+
+export default function CompanyInfo({ 
+  company, 
+  logo, 
+  location, 
+  industry, 
+  website, 
+  linkedin, 
+  founded, 
+  size, 
+  description 
+}: CompanyInfoProps) {
   return (
     <div className="glass p-6 rounded-xl">
       <h2 className="text-[24px] leading-[32px] tracking-[-0.02em] font-semibold text-[#dae2fd] mb-4">
-        About Nebula Systems
+        About {company}
       </h2>
       <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-1/3 aspect-video rounded-lg overflow-hidden">
-          <img
-            className="w-full h-full object-cover"
-            alt="Nebula Systems office"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuATH4Urb3Nw-OZWcEV5LQ5iAI0XZE_mhpIaPxeLeC3irhHfin4VU0_kECDhzIyx6O-QFQLeY5IPLORfwGQY8V40P2WrhqQBcjQHFyWB-uHr55coUxB8qq4Bie4EsVOb_ONVbPa0ob2CFR43f-RBbjPNeWBk6bHYWiIzCDKVzqFlRd8ZTjzKpHsiYz9doPDuPbhTWm7tI6hd7aaFPia5QvK1hV1VU-t1d0bnmgwj0nyInmGvm2Tbodn-xw"
-          />
-        </div>
+        {logo && (
+          <div className="w-full md:w-1/3 aspect-video rounded-lg overflow-hidden">
+            <img
+              className="w-full h-full object-cover"
+              alt={`${company} office`}
+              src={logo}
+            />
+          </div>
+        )}
         <div className="flex-1 space-y-4">
-          <p className="text-[14px] leading-[20px] tracking-[0em] font-normal text-[#c7c4d7]">
-            Founded in 2021, Nebula Systems has raised over $45M in Series A funding from top-tier VCs. We are a
-            remote-first team spread across 12 countries, united by our mission to simplify cloud complexity.
-          </p>
+          {description && (
+            <p className="text-[14px] leading-[20px] tracking-[0em] font-normal text-[#c7c4d7]">
+              {description}
+            </p>
+          )}
+          {!description && (
+            <p className="text-[14px] leading-[20px] tracking-[0em] font-normal text-[#c7c4d7]">
+              {company} is a company in the {industry || 'technology'} sector.
+            </p>
+          )}
+          <div className="grid grid-cols-2 gap-4 text-sm text-[#c7c4d7]">
+            {founded && (
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>Founded: {founded}</span>
+              </div>
+            )}
+            {size && (
+              <div className="flex items-center gap-2">
+                <House className="w-4 h-4" />
+                <span>Size: {size}</span>
+              </div>
+            )}
+            {location && (
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                <span>{location}</span>
+              </div>
+            )}
+            {industry && (
+              <div className="flex items-center gap-2">
+                <House className="w-4 h-4" />
+                <span>Industry: {industry}</span>
+              </div>
+            )}
+          </div>
           <div className="flex gap-6">
-            <a
-              className="text-[#c0c1ff] text-[12px] leading-[16px] tracking-[0.02em] font-medium flex items-center gap-1 hover:underline"
-              href="#"
-            >
-              <Globe className="w-4 h-4" /> Visit Website
-            </a>
-            <a
-              className="text-[#c0c1ff] text-[12px] leading-[16px] tracking-[0.02em] font-medium flex items-center gap-1 hover:underline"
-              href="#"
-            >
-              <LinkIcon className="w-4 h-4" /> LinkedIn
-            </a>
+            {website && (
+              <a
+                className="text-[#c0c1ff] text-[12px] leading-[16px] tracking-[0.02em] font-medium flex items-center gap-1 hover:underline"
+                href={website}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Globe className="w-4 h-4" /> Visit Website
+              </a>
+            )}
+            {linkedin && (
+              <a
+                className="text-[#c0c1ff] text-[12px] leading-[16px] tracking-[0.02em] font-medium flex items-center gap-1 hover:underline"
+                href={linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <LinkIcon className="w-4 h-4" /> LinkedIn
+              </a>
+            )}
           </div>
         </div>
       </div>

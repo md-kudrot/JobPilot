@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Envelope, Lock, Eye, ArrowRight, Rocket, Person, Briefcase, Headphones, CircleCheck } from '@gravity-ui/icons';
-import { signIn, signUp } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 
 interface AuthFormProps {
   mode: 'login' | 'signup';
@@ -41,13 +41,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
     try {
       if (isLogin) {
-        const { error } = await signIn.email({ email, password });
+        const { error } = await authClient.signIn.email({ email, password });
         if (error) {
           setError(error.message ?? 'Unable to sign in. Please try again.');
           return;
         }
       } else {
-        const { error } = await signUp.email({
+        const { error } = await authClient.signUp.email({
           email,
           password,
           name: `${firstName} ${lastName}`.trim() || email,

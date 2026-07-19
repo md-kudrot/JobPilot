@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { SparklesFill } from '@gravity-ui/icons';
 
 export interface Job {
-  id: number;
+  _id: string;
   title: string;
   company: string;
   industry: string;
@@ -23,7 +23,7 @@ export default function JobCard({ job }: { job: Job }) {
       : 'bg-[#8083ff]/20 text-[#c0c1ff]';
 
   return (
-    <Link href={`/jobs/${job.id}`}>
+    <Link href={`/jobs/${job._id}`}>
       <article className="glass-card rounded-[20px] p-6 flex flex-col justify-between hover-lift ai-gradient-bg relative group overflow-hidden cursor-pointer">
       <div className="space-y-3">
         <div className="flex justify-between items-start">

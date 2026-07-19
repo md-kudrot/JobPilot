@@ -3,12 +3,13 @@
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Moon } from '@gravity-ui/icons';
-import { useSession, signOut } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 
 const NAV_ITEMS = [
   { label: 'Home', href: '/' },
-  { label: 'Dashboard', href: '/dashboard', auth: true },
   { label: 'Explore Jobs', href: '/jobs' },
+  // { label: 'Dashboard', href: '/dashboard', auth: true },
+  { label: 'Jobs For You', href: '/jobs-for-you', auth: true },
   { label: 'My Applications', href: '/my-applications', auth: true },
   { label: 'Post Job', href: '/post-job' },
 ];
@@ -16,7 +17,7 @@ const NAV_ITEMS = [
 export default function Header({ active = 'Home' }: { active?: string }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = authClient.useSession();
 
   // Secondary nav highlights the route matching the current URL.
   const isActive = (item: { label: string; href: string }) =>
@@ -24,7 +25,7 @@ export default function Header({ active = 'Home' }: { active?: string }) {
     item.label === active;
 
   const handleSignOut = async () => {
-    await signOut();
+    await authClient.signOut();
     router.push('/login');
     router.refresh();
   };
@@ -57,9 +58,7 @@ export default function Header({ active = 'Home' }: { active?: string }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-[#ffffff]/5 rounded-full transition-all duration-200 text-[#c7c4d7]">
-            <Moon className="w-6 h-6" />
-          </button>
+         
           <div className="h-6 w-px bg-[#ffffff]/10 mx-1"></div>
           {isPending ? (
             <div className="h-7 w-24 rounded-lg bg-[#ffffff]/5 animate-pulse"></div>
@@ -71,6 +70,10 @@ export default function Header({ active = 'Home' }: { active?: string }) {
               >
                 {session.user.name || session.user.email}
               </a>
+
+
+              <a href="/dashboard" className="text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#c7c4d7] hover:text-[#c0c1ff] transition-colors px-3 py-1">Dashboard</a>
+
               <button
                 onClick={handleSignOut}
                 className="text-[12px] leading-[16px] tracking-[0.02em] font-bold px-6 py-1 bg-[#c0c1ff] text-[#0d0096] rounded-lg hover:scale-95 transition-transform"

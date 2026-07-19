@@ -24,7 +24,7 @@ export default function MyApplicationsPage() {
             <ApplicationsList />
           </div>
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

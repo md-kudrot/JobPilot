@@ -3,11 +3,7 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import MetricCards from '@/components/dashboard/MetricCards';
-import ApplicationTimeline from '@/components/dashboard/ApplicationTimeline';
-import StatusDistribution from '@/components/dashboard/StatusDistribution';
-import TopSkills from '@/components/dashboard/TopSkills';
-import UpcomingActivities from '@/components/dashboard/UpcomingActivities';
+import DashboardContent from '@/components/dashboard/DashboardContent';
 
 export const metadata: Metadata = {
   title: 'Dashboard | JobPilot AI',
@@ -22,15 +18,7 @@ export default function DashboardPage() {
         <Header active="Dashboard" />
         <main className="pt-32 pb-16">
           <DashboardHeader />
-          <MetricCards />
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
-            <ApplicationTimeline />
-            <StatusDistribution />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <TopSkills />
-            <UpcomingActivities />
-          </div>
+          <DashboardContent />
         </main>
         <Footer />
       </div>
