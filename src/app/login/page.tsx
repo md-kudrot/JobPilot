@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import React from 'react';
+import React, { Suspense } from 'react';
 import AuthLeftSidebar from '@/components/auth/AuthLeftSidebar';
 import AuthForm from '@/components/auth/AuthForm';
 
@@ -12,7 +12,9 @@ export default function LoginPage() {
   return (
     <main className="w-full min-h-screen flex flex-col md:flex-row bg-[#0b1326] text-[#dae2fd]">
       <AuthLeftSidebar />
-      <AuthForm mode="login" />
+      <Suspense fallback={null}>
+        <AuthForm mode="login" />
+      </Suspense>
     </main>
   );
 }

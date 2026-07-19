@@ -10,7 +10,6 @@ import JobCategories from '@/components/JobCategories';
 import Testimonials from '@/components/Testimonials';
 import Faq from '@/components/Faq';
 import Cta from '@/components/Cta';
-import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
 
 export default function JobPilotPage() {
@@ -27,7 +26,6 @@ export default function JobPilotPage() {
           <Testimonials />
           <Faq />
           <Cta />
-          <Newsletter />
         </main>
         <Footer />
       </div>

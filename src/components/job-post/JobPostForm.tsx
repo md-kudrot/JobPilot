@@ -11,10 +11,12 @@ import {
   Bold,
   Italic,
   ListUl,
+  MagicWand,
 } from '@gravity-ui/icons';
 
 export default function JobPostForm() {
   const [aiOptimization, setAiOptimization] = useState(true);
+  const [rawPaste, setRawPaste] = useState('');
   const [skills, setSkills] = useState(['React', 'TypeScript', 'Tailwind CSS']);
   const [newSkill, setNewSkill] = useState('');
   const [sliders, setSliders] = useState({
@@ -49,6 +51,38 @@ export default function JobPostForm() {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
+      {/* Quick Paste: drop a full job description and we'll structure it */}
+      <section className="glass-card p-6 rounded-2xl bg-gradient-to-r from-[#c0c1ff]/5 via-[#4edea3]/5 to-[#c0c1ff]/5">
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-3">
+            <MagicWand className="text-[#c0c1ff] w-6 h-6 shrink-0" />
+            <div>
+              <h2 className="text-[24px] leading-[32px] tracking-[-0.02em] font-semibold text-[#dae2fd]">
+                Quick Paste
+              </h2>
+              <p className="text-[14px] leading-[20px] tracking-[0em] font-normal text-[#c7c4d7]">
+                Have a job description ready? Paste the full text here and we&apos;ll turn it into a structured post.
+              </p>
+            </div>
+          </div>
+          {rawPaste.trim() && (
+            <button
+              className="shrink-0 text-[12px] leading-[16px] tracking-[0.02em] font-medium text-[#c7c4d7] border border-[#ffffff]/10 rounded-[14px] px-4 py-2 hover:bg-[#ffffff]/5 transition-all active:scale-95"
+              onClick={() => setRawPaste('')}
+              type="button"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        <textarea
+          className="w-full bg-[#060e20] border border-[#464554] text-[#dae2fd] rounded-[14px] py-3 px-4 focus:outline-none focus:border-[#c0c1ff] focus:shadow-[0_0_0_4px_rgba(192,193,255,0.15)] transition-all resize-y min-h-[160px] placeholder:text-[#908fa0]/50"
+          value={rawPaste}
+          onChange={(e) => setRawPaste(e.target.value)}
+          placeholder={`Paste a full job posting, e.g.\n\nWe are looking for an experienced Node.js Developer to join us on a part-time, project basis...\n\nResponsibilities:\n- Review and diagnose existing bugs/issues\n- Fix broken functionality and improve performance\n\nRequirements:\n- Proven experience with Node.js and Express\n\nApply: convergelogics@gmail.com`}
+        />
+      </section>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 1: Job Overview */}
         <section className="glass-card p-6 rounded-2xl flex flex-col gap-6">
