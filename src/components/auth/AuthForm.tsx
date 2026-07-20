@@ -12,7 +12,7 @@ interface AuthFormProps {
 export default function AuthForm({ mode }: AuthFormProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const redirectTo = searchParams.get("redirect") || "/dashboard"
+    const redirectTo = searchParams.get("redirect") || "/profile"
     const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)

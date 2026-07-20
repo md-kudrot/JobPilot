@@ -12,7 +12,7 @@ export default function DashboardHeader() {
     return (
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 animate-fade-in">
             <div>
-                <h1 className="text-[30px] leading-[38px] mt-10 tracking-[-0.02em] font-semibold text-[#dae2fd] mb-1">
+                <h1 className="text-[30px] leading-[38px] mt-10 md:mt-0 tracking-[-0.02em] font-semibold text-[#dae2fd] mb-1">
                     Welcome back, {name}
                 </h1>
                 <p className="text-[16px] leading-[24px] tracking-[0em] font-normal text-[#c7c4d7]">

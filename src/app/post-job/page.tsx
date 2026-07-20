@@ -25,7 +25,7 @@ export default async function PostJobPage() {
             <main className="flex-grow pt-32 pb-16 px-6 max-w-7xl mx-auto w-full">
                 {/* Header Section */}
                 <div className="text-center mb-16">
-                    <h1 className="text-[48px] leading-[56px] mt-10 tracking-[-0.04em] font-bold text-[#dae2fd] mb-1">
+                    <h1 className="text-[48px] leading-[56px] mt-10 md:mt-0  tracking-[-0.04em] font-bold text-[#dae2fd] mb-1">
                         Post a New Job
                     </h1>
                     <p className="text-[18px] leading-[28px] tracking-[0em] font-normal text-[#c7c4d7] max-w-2xl mx-auto">

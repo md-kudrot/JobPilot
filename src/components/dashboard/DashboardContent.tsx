@@ -26,18 +26,31 @@ const EMPTY: DashboardData = {
 };
 
 export default function DashboardContent() {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const [data, setData] = useState<DashboardData>(EMPTY);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Wait for the session to resolve before fetching — querying without an
+    // email makes the backend count every user's applications (seeded demo data).
+    if (isPending) return;
+    let cancelled = false;
     const query = session?.user?.email ? `?email=${encodeURIComponent(session.user.email)}` : '';
     api
       .get<DashboardData>(`/api/dashboard${query}`)
-      .then((d) => setData(d))
-      .catch(() => setData(EMPTY))
-      .finally(() => setLoading(false));
-  }, [session]);
+      .then((d) => {
+        if (!cancelled) setData(d);
+      })
+      .catch(() => {
+        if (!cancelled) setData(EMPTY);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [session, isPending]);
 
   if (loading) {
     return <div className="glass-card p-12 rounded-2xl text-center text-[#c7c4d7]">Loading dashboard...</div>;

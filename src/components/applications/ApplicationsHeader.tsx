@@ -19,7 +19,7 @@ export default function ApplicationsHeader() {
     return (
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 animate-fade-in">
             <div>
-                <h1 className="text-[30px] leading-[38px] tracking-[-0.02em] font-semibold text-[#dae2fd] mt-10 mb-1">
+                <h1 className="text-[30px] leading-[38px] tracking-[-0.02em] font-semibold text-[#dae2fd] mt-10 md:mt-0 mb-1">
                     My Applications
                 </h1>
                 <p className="text-[16px] leading-[24px] tracking-[0em] font-normal text-[#c7c4d7]">

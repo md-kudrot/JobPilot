@@ -11,7 +11,7 @@ interface JobsHeroProps {
 
 export default function JobsHero({ search, location, onSearchChange, onLocationChange, onSubmit }: JobsHeroProps) {
     return (
-        <section className="space-y-6 mt-10">
+        <section className="space-y-6 mt-10 md:mt-0">
             <div className="space-y-1">
                 <h1 className="text-[36px] leading-[44px] tracking-[-0.03em] font-bold text-[#dae2fd]">
                     Find your next <span className="text-[#c0c1ff] italic">dream role</span>

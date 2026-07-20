@@ -184,7 +184,7 @@ export default function Header({ active: _active }: { active?: string } = {}) {
             </nav>
 
             {/* Secondary nav — shows the center links below the navbar once they no longer fit inline */}
-            <div className="lg:hidden border-t border-[#ffffff]/10 bg-[#0b1326]/60 pl-26 pr-8 overflow-x-auto whitespace-nowrap">
+            <div className="lg:hidden border-t border-[#ffffff]/10 bg-[#0b1326]/60 pl-26 md:pl-0 pr-8 overflow-x-auto whitespace-nowrap">
                 <div className="flex items-center justify-center gap-6 px-5 py-3">
                     {navItems.map((item) =>
                         isActive(item.href) ? (

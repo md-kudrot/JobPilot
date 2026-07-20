@@ -16,7 +16,7 @@ export default function ProfilePage() {
             <main className="flex-grow pt-32 pb-16 px-6 max-w-7xl mx-auto w-full">
                 {/* Header Section */}
                 <div className="text-center mb-16">
-                    <h1 className="text-[36px] leading-[44px] md:text-[48px] md:leading-[56px] tracking-[-0.04em] font-bold text-[#dae2fd] mb-1 mt-10">
+                    <h1 className="text-[36px] leading-[44px] md:text-[48px] md:leading-[56px] tracking-[-0.04em] font-bold text-[#dae2fd] mb-1 mt-10 md:mt-0">
                         Your Career Profile
                     </h1>
                     <p className="text-[16px] leading-[24px] md:text-[18px] md:leading-[28px] tracking-[0em] font-normal text-[#c7c4d7] max-w-2xl mx-auto">

@@ -74,7 +74,7 @@ export default function JobsForYouPage() {
         <div className="bg-[#0b1326] text-[#dae2fd] min-h-screen ">
             <main className="pt-32 pb-16 px-6 max-w-7xl mx-auto w-full">
                 {/* Header Section */}
-                <div className="text-center mb-12 mt-10">
+                <div className="text-center mb-12 mt-10 md:mt-10">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#4edea3]/10 border border-[#4edea3]/20 rounded-full mb-4">
                         <SparklesFill className="w-5 h-5 text-[#4edea3]" />
                         <span className="text-[12px] leading-[16px] tracking-[0.05em] font-bold uppercase text-[#4edea3]">
@@ -89,7 +89,7 @@ export default function JobsForYouPage() {
                             ? "Matched against your skills, preferred role, job type, and location from your profile."
                             : jobs.length > 0
                               ? "Here are the latest job opportunities available."
-                              : "Log in and complete your profile to get matches tailored to you."}
+                              : "complete your profile to get matches tailored to you."}
                     </p>
                 </div>
 
@@ -103,7 +103,7 @@ export default function JobsForYouPage() {
                             <p className="text-[14px] leading-[20px] tracking-[0em] font-normal text-[#c7c4d7]">
                                 {email
                                     ? "Complete your profile so we can match jobs to your skills and preferences."
-                                    : "Log in and complete your profile to get matches tailored to you."}
+                                    : " complete your profile to get matches tailored to you."}
                             </p>
                         </div>
                         <Link
