@@ -63,7 +63,7 @@ export default function Header({ active: _active }: { active?: string } = {}) {
             : undefined
 
     return (
-        <header className="fixed flex items-center justify-center top-0 left-1/2 -translate-x-1/2 w-screen z-50 bg-[#0b1326]/80 backdrop-blur-md border-b border-[#ffffff]/10 shadow-sm">
+        <header className="fixed flex items-center justify-center flex-wrap  top-0 left-1/2 -translate-x-1/2 w-screen z-50 bg-[#0b1326]/80 backdrop-blur-md border-b border-[#ffffff]/10 shadow-sm">
             <nav className="flex w-[80%] justify-between items-center px-5 md:px-10 py-3  h-20">
                 <div className="flex items-center gap-6">
                     <a
@@ -184,7 +184,7 @@ export default function Header({ active: _active }: { active?: string } = {}) {
             </nav>
 
             {/* Secondary nav — shows the center links below the navbar once they no longer fit inline */}
-            <div className="lg:hidden border-t border-[#ffffff]/10 bg-[#0b1326]/60 overflow-x-auto whitespace-nowrap">
+            <div className="lg:hidden border-t border-[#ffffff]/10 bg-[#0b1326]/60 pl-26 pr-8 overflow-x-auto whitespace-nowrap">
                 <div className="flex items-center justify-center gap-6 px-5 py-3">
                     {navItems.map((item) =>
                         isActive(item.href) ? (
