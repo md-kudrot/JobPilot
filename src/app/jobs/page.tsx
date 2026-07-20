@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react"
 import JobsHero from "@/components/jobs/JobsHero"
-import JobsFilterBar from "@/components/jobs/JobsFilterBar"
+import JobsFilterBar, { type SalaryRange } from "@/components/jobs/JobsFilterBar"
 import JobsGrid from "@/components/jobs/JobsGrid"
 import JobsPagination from "@/components/jobs/JobsPagination"
 import { api, type Job, type Pagination } from "@/lib/api"
@@ -23,6 +23,8 @@ export default function JobsPage() {
     const [search, setSearch] = useState("")
     const [location, setLocation] = useState("")
     const [sort, setSort] = useState("newest")
+    const [jobType, setJobType] = useState("All")
+    const [salary, setSalary] = useState<SalaryRange>({ label: "All" })
     const [page, setPage] = useState(1)
 
     const fetchJobs = useCallback(async () => {
@@ -32,6 +34,9 @@ export default function JobsPage() {
             const params = new URLSearchParams({ page: String(page), limit: "8", sort })
             if (search) params.set("search", search)
             if (location) params.set("location", location)
+            if (jobType !== "All") params.set("jobType", jobType)
+            if (salary.min != null) params.set("salaryMin", String(salary.min))
+            if (salary.max != null) params.set("salaryMax", String(salary.max))
             const data = await api.get<JobsResponse>(`/api/jobs?${params.toString()}`)
             setJobs(data.jobs)
             setPagination(data.pagination)
@@ -42,7 +47,7 @@ export default function JobsPage() {
         } finally {
             setLoading(false)
         }
-    }, [page, sort, search, location])
+    }, [page, sort, search, location, jobType, salary])
 
     useEffect(() => {
         fetchJobs()
@@ -69,6 +74,16 @@ export default function JobsPage() {
                         sort={sort}
                         onSortChange={(s) => {
                             setSort(s)
+                            setPage(1)
+                        }}
+                        jobType={jobType}
+                        onJobTypeChange={(t) => {
+                            setJobType(t)
+                            setPage(1)
+                        }}
+                        salary={salary}
+                        onSalaryChange={(r) => {
+                            setSalary(r)
                             setPage(1)
                         }}
                     />
